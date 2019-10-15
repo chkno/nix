@@ -103,8 +103,6 @@ static void update(const StringSet & channelNames)
             cname = cname + (string) match[1];
         }
 
-        std::string extraAttrs;
-
         bool unpacked = false;
         if (std::regex_search(filename, std::regex("\\.tar\\.(gz|bz2|xz)$"))) {
             runProgram(settings.nixBinDir + "/nix-build", false, { "--no-out-link", "--expr", "import <nix/unpack-channel.nix> "
@@ -123,7 +121,7 @@ static void update(const StringSet & channelNames)
         }
 
         // Regardless of where it came from, add the expression representing this channel to accumulated expression
-        exprs.push_back("f: f { name = \"" + cname + "\"; channelName = \"" + name + "\"; src = builtins.storePath \"" + filename + "\"; " + extraAttrs + " }");
+        exprs.push_back("f: f { name = \"" + cname + "\"; channelName = \"" + name + "\"; src = builtins.storePath \"" + filename + "\"; }");
     }
 
     // Unpack the channel tarballs into the Nix store and install them
